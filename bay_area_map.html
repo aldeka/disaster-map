@@ -59,6 +59,45 @@
     vertical-align: middle;
     margin-right: 6px;
   }
+  .legend-swatch-tan {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: #d2b48c;
+    opacity: 0.6;
+    border: 1px solid #8b7355;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .legend-swatch-gray {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: #808080;
+    opacity: 0.55;
+    border: 1px solid #4d4d4d;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .legend-swatch-indigo {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: #4b0082;
+    opacity: 0.45;
+    border: 1px solid #2e0854;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .legend-swatch-outline-navy {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: transparent;
+    border: 2px solid #00008b;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
 </style>
 </head>
 <body>
@@ -69,6 +108,11 @@
 <script src="data/fire_hazard.js"></script>
 <script src="data/flood_100yr.js"></script>
 <script src="data/flood_500yr.js"></script>
+<script src="data/faults.js"></script>
+<script src="data/liquefaction.js"></script>
+<script src="data/landslide.js"></script>
+<script src="data/tsunami.js"></script>
+<script src="data/dam_inundation.js"></script>
 <script>
   const map = L.map('map').setView([37.7749, -122.2200], 10);
 
@@ -126,14 +170,45 @@
   const stripePattern = stripeCtx.createPattern(stripeTile, 'repeat');
   stripePattern.setTransform(new DOMMatrix().rotate(45));
 
+  // Swapped per request: 100-year now solid/more opaque, 500-year now striped.
   const flood100Layer = L.geoJSON(FLOOD_100YR_DATA, {
     renderer: hazardRenderer,
-    style: { color: '#1a5fb4', weight: 1, fillColor: stripePattern, fillOpacity: 1 }
+    style: { color: '#0b3d91', weight: 1, fillColor: '#3366ff', fillOpacity: 0.55 }
   });
 
   const flood500Layer = L.geoJSON(FLOOD_500YR_DATA, {
     renderer: hazardRenderer,
-    style: { color: '#0b3d91', weight: 1, fillColor: '#3366ff', fillOpacity: 0.55 }
+    style: { color: '#1a5fb4', weight: 1, fillColor: stripePattern, fillOpacity: 1 }
+  });
+
+  // --- Earthquake fault traces (CGS Fault & Fold DB, filtered to the
+  // named major Bay Area fault zones) ---
+  const faultLayer = L.geoJSON(FAULT_DATA, {
+    renderer: hazardRenderer,
+    style: { color: '#7b3f00', weight: 2 }
+  });
+
+  // --- CGS liquefaction & landslide zones (earthquake-triggered ground failure) ---
+  const liquefactionLayer = L.geoJSON(LIQUEFACTION_DATA, {
+    renderer: hazardRenderer,
+    style: { color: '#8b7355', weight: 1, fillColor: '#d2b48c', fillOpacity: 0.6 }
+  });
+
+  const landslideLayer = L.geoJSON(LANDSLIDE_DATA, {
+    renderer: hazardRenderer,
+    style: { color: '#4d4d4d', weight: 1, fillColor: '#808080', fillOpacity: 0.55 }
+  });
+
+  // --- CA tsunami hazard area (Cal OES / CGS) ---
+  const tsunamiLayer = L.geoJSON(TSUNAMI_DATA, {
+    renderer: hazardRenderer,
+    style: { color: '#2e0854', weight: 1, fillColor: '#4b0082', fillOpacity: 0.45 }
+  });
+
+  // --- Dam failure inundation areas (Cal OES/DSOD) — outline only, no fill ---
+  const damLayer = L.geoJSON(DAM_INUNDATION_DATA, {
+    renderer: hazardRenderer,
+    style: { color: '#00008b', weight: 2, fill: false }
   });
 
   fhszLayer.addTo(map);
@@ -141,16 +216,26 @@
   L.control.layers(null, {
     'Very High Fire Hazard Zones': fhszLayer,
     '100-Year Flood Zone (1% annual chance)': flood100Layer,
-    '500-Year Flood Zone (0.2% annual chance)': flood500Layer
+    '500-Year Flood Zone (0.2% annual chance)': flood500Layer,
+    'Major Earthquake Faults': faultLayer,
+    'Liquefaction Zones': liquefactionLayer,
+    'Landslide Zones': landslideLayer,
+    'Tsunami Hazard Area': tsunamiLayer,
+    'Dam Failure Inundation Area': damLayer
   }, { collapsed: false }).addTo(map);
 
   const legend = L.control({ position: 'bottomleft' });
   legend.onAdd = function () {
     const div = L.DomUtil.create('div', 'legend-box');
     div.innerHTML = '<span class="legend-swatch"></span>Very High Fire Hazard Severity Zone<br>' +
-      '<span class="legend-swatch-stripe"></span>100-Year Flood Zone (1% annual chance)<br>' +
-      '<span class="legend-swatch-solid-blue"></span>500-Year Flood Zone (0.2% annual chance)<br>' +
-      '<span style="font-size:10px;color:#555;">Sources: CAL FIRE FRAP; FEMA National Flood Hazard Layer</span>';
+      '<span class="legend-swatch-solid-blue"></span>100-Year Flood Zone (1% annual chance)<br>' +
+      '<span class="legend-swatch-stripe"></span>500-Year Flood Zone (0.2% annual chance)<br>' +
+      '<span style="display:inline-block;width:14px;height:2px;background:#7b3f00;vertical-align:middle;margin-right:6px;"></span>Major Earthquake Fault<br>' +
+      '<span class="legend-swatch-tan"></span>Liquefaction Zone<br>' +
+      '<span class="legend-swatch-gray"></span>Landslide Zone<br>' +
+      '<span class="legend-swatch-indigo"></span>Tsunami Hazard Area<br>' +
+      '<span class="legend-swatch-outline-navy"></span>Dam Failure Inundation Area<br>' +
+      '<span style="font-size:10px;color:#555;">Sources: CAL FIRE FRAP; FEMA NFHL; CGS Fault &amp; Fold DB, Liquefaction &amp; Landslide Zones; CA Tsunami Hazard Area; Cal OES/DSOD Dam Inundation</span>';
     return div;
   };
   legend.addTo(map);
