@@ -59,30 +59,16 @@
     vertical-align: middle;
     margin-right: 6px;
   }
-  .flood-zoom-notice {
-    background: rgba(255,255,255,0.9);
-    padding: 6px 10px;
-    border-radius: 6px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-    font-size: 12px;
-    color: #333;
-    display: none;
-  }
 </style>
 </head>
 <body>
 <div class="title-box">San Francisco Bay Area</div>
 <div id="map"></div>
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <pattern id="flood100Stripes" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
-      <rect width="8" height="8" fill="#4a90e2" fill-opacity="0.28"></rect>
-      <line x1="0" y1="0" x2="0" y2="8" stroke="#1a5fb4" stroke-width="4" stroke-opacity="0.55"></line>
-    </pattern>
-  </defs>
-</svg>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data/fire_hazard.js"></script>
+<script src="data/flood_100yr.js"></script>
+<script src="data/flood_500yr.js"></script>
 <script>
   const map = L.map('map').setView([37.7749, -122.2200], 10);
 
@@ -109,149 +95,48 @@
   });
 
   // --- Very High Fire Hazard Severity Zones (CAL FIRE FRAP, State GIS) ---
-  const fhszStyle = {
-    color: '#b30000',
-    weight: 1,
-    fillColor: '#ff0000',
-    fillOpacity: 0.35
-  };
+  // Loaded from data/fire_hazard.js, cached locally by scripts/fetch_data.py
+  // (see that file to refresh). Rendered on canvas rather than SVG since
+  // these layers can carry thousands of polygons; canvas holds up far
+  // better under pan/zoom than one DOM node per polygon.
+  const hazardRenderer = L.canvas();
 
-  const fhszLayer = L.layerGroup();
-
-  const bayAreaBbox = '-123.6,36.8,-121.2,38.9';
-  const fhszSources = [
-    // SRA: State Responsibility Area, filtered to Very High
-    `https://services.gis.ca.gov/arcgis/rest/services/Environment/Fire_Severity_Zones/MapServer/0/query?where=${encodeURIComponent("HAZ_CLASS='Very High'")}&geometry=${bayAreaBbox}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=HAZ_CLASS&returnGeometry=true&outSR=4326&f=geojson`,
-    // LRA: Local Responsibility Area, recommended Very High (all features in this layer are VH)
-    `https://services.gis.ca.gov/arcgis/rest/services/Environment/Fire_Severity_Zones/MapServer/1/query?geometry=${bayAreaBbox}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=VH_REC&returnGeometry=true&outSR=4326&f=geojson`
-  ];
-
-  Promise.all(fhszSources.map(url => fetch(url).then(r => r.json())))
-    .then(results => {
-      results.forEach(geojson => {
-        if (geojson && geojson.features) {
-          L.geoJSON(geojson, { style: fhszStyle }).addTo(fhszLayer);
-        }
-      });
-      fhszLayer.addTo(map);
-    })
-    .catch(err => console.error('Failed to load fire hazard zones:', err));
+  const fhszLayer = L.geoJSON(FIRE_HAZARD_DATA, {
+    renderer: hazardRenderer,
+    style: { color: '#b30000', weight: 1, fillColor: '#ff0000', fillOpacity: 0.35 }
+  });
 
   // --- FEMA flood hazard zones (National Flood Hazard Layer) ---
-  // The NFHL is far more granular than the fire hazard data (parcel-scale
-  // polygons), so rather than loading the whole Bay Area at once we query
-  // FEMA's ArcGIS service for whatever is in view, refetching as the map
-  // is panned/zoomed, and only once zoomed in enough to keep result sizes
-  // (and the service's 2000-feature-per-request cap) reasonable.
-  const FLOOD_QUERY_URL = 'https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query';
-  const FLOOD_MIN_ZOOM = 12;
-  const FLOOD_MAX_FEATURES = 2000;
-  // 1% annual chance (100-year) Special Flood Hazard Area
-  const FLOOD_100YR_WHERE = "SFHA_TF='T'";
-  // 0.2% annual chance (500-year) flood hazard
-  const FLOOD_500YR_WHERE = "FLD_ZONE='X' AND ZONE_SUBTY LIKE '0.2 PCT%'";
+  // Loaded from data/flood_100yr.js / data/flood_500yr.js, same cache.
+  // The 100-year layer uses a diagonal-stripe canvas pattern as its
+  // fillStyle (Leaflet just forwards style.fillColor to ctx.fillStyle,
+  // which accepts a CanvasPattern, not only a color string).
+  const stripeTile = document.createElement('canvas');
+  stripeTile.width = 8;
+  stripeTile.height = 8;
+  const stripeCtx = stripeTile.getContext('2d');
+  stripeCtx.fillStyle = 'rgba(74,144,226,0.28)';
+  stripeCtx.fillRect(0, 0, 8, 8);
+  stripeCtx.strokeStyle = 'rgba(26,95,180,0.65)';
+  stripeCtx.lineWidth = 4;
+  stripeCtx.beginPath();
+  stripeCtx.moveTo(0, 0);
+  stripeCtx.lineTo(0, 8);
+  stripeCtx.stroke();
+  const stripePattern = stripeCtx.createPattern(stripeTile, 'repeat');
+  stripePattern.setTransform(new DOMMatrix().rotate(45));
 
-  const flood100Layer = L.layerGroup();
-  const flood500Layer = L.layerGroup();
-  let floodLoadToken = 0;
+  const flood100Layer = L.geoJSON(FLOOD_100YR_DATA, {
+    renderer: hazardRenderer,
+    style: { color: '#1a5fb4', weight: 1, fillColor: stripePattern, fillOpacity: 1 }
+  });
 
-  const floodNotice = L.control({ position: 'bottomleft' });
-  floodNotice.onAdd = function () {
-    const div = L.DomUtil.create('div', 'flood-zoom-notice');
-    div.textContent = 'Zoom in further to load flood hazard zones for this area.';
-    return div;
-  };
-  floodNotice.addTo(map);
+  const flood500Layer = L.geoJSON(FLOOD_500YR_DATA, {
+    renderer: hazardRenderer,
+    style: { color: '#0b3d91', weight: 1, fillColor: '#3366ff', fillOpacity: 0.55 }
+  });
 
-  function floodBboxParam() {
-    const b = map.getBounds();
-    return [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].join(',');
-  }
-
-  async function queryFlood(where, bbox, { countOnly = false } = {}) {
-    const params = new URLSearchParams({
-      where,
-      geometry: bbox,
-      geometryType: 'esriGeometryEnvelope',
-      inSR: '4326',
-      spatialRel: 'esriSpatialRelIntersects',
-      outFields: 'FLD_ZONE,ZONE_SUBTY,SFHA_TF',
-      returnGeometry: String(!countOnly),
-      outSR: '4326',
-      resultRecordCount: String(FLOOD_MAX_FEATURES),
-      f: countOnly ? 'json' : 'geojson'
-    });
-    if (countOnly) params.set('returnCountOnly', 'true');
-    const res = await fetch(`${FLOOD_QUERY_URL}?${params}`);
-    return res.json();
-  }
-
-  function debounce(fn, delayMs) {
-    let t;
-    return (...args) => {
-      clearTimeout(t);
-      t = setTimeout(() => fn(...args), delayMs);
-    };
-  }
-
-  async function refreshFloodLayers() {
-    const token = ++floodLoadToken;
-    if (map.getZoom() < FLOOD_MIN_ZOOM) {
-      flood100Layer.clearLayers();
-      flood500Layer.clearLayers();
-      floodNotice.getContainer().style.display = 'block';
-      return;
-    }
-
-    const bbox = floodBboxParam();
-    try {
-      const count = await queryFlood(FLOOD_100YR_WHERE, bbox, { countOnly: true });
-      if (token !== floodLoadToken) return;
-      if ((count.count || 0) > FLOOD_MAX_FEATURES) {
-        flood100Layer.clearLayers();
-        flood500Layer.clearLayers();
-        floodNotice.getContainer().textContent = 'Zoom in further to load flood hazard zones for this area.';
-        floodNotice.getContainer().style.display = 'block';
-        return;
-      }
-      floodNotice.getContainer().style.display = 'none';
-
-      const [g100, g500] = await Promise.all([
-        queryFlood(FLOOD_100YR_WHERE, bbox),
-        queryFlood(FLOOD_500YR_WHERE, bbox)
-      ]);
-      if (token !== floodLoadToken) return;
-
-      flood100Layer.clearLayers();
-      flood500Layer.clearLayers();
-
-      if (g100.features && g100.features.length) {
-        const layer = L.geoJSON(g100, {
-          style: { color: '#1a5fb4', weight: 1, fillOpacity: 1 },
-          onEachFeature: (feature, lyr) => {
-            // Path elements don't exist until the layer is actually attached
-            // to the map (which may happen later, via the layer-control
-            // checkbox), so apply the pattern fill on every 'add', not once.
-            lyr.on('add', () => {
-              const el = lyr.getElement && lyr.getElement();
-              if (el) el.setAttribute('fill', 'url(#flood100Stripes)');
-            });
-          }
-        });
-        layer.addTo(flood100Layer);
-      }
-      if (g500.features && g500.features.length) {
-        L.geoJSON(g500, {
-          style: { color: '#0b3d91', weight: 1, fillColor: '#3366ff', fillOpacity: 0.55 }
-        }).addTo(flood500Layer);
-      }
-    } catch (err) {
-      console.error('Failed to load flood hazard zones:', err);
-    }
-  }
-
-  map.on('moveend', debounce(refreshFloodLayers, 400));
-  refreshFloodLayers();
+  fhszLayer.addTo(map);
 
   L.control.layers(null, {
     'Very High Fire Hazard Zones': fhszLayer,
