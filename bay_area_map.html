@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bay Area Map</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  html, body { height: 100%; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+  #map { height: 100%; width: 100%; }
+  .title-box {
+    position: absolute;
+    top: 10px;
+    left: 50px;
+    z-index: 1000;
+    background: rgba(255,255,255,0.9);
+    padding: 8px 14px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+  }
+  .legend-box {
+    background: rgba(255,255,255,0.9);
+    padding: 8px 12px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    font-size: 12px;
+    color: #222;
+    line-height: 1.4;
+  }
+  .legend-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: #ff0000;
+    opacity: 0.35;
+    border: 1px solid #b30000;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="title-box">San Francisco Bay Area</div>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const map = L.map('map').setView([37.7749, -122.2200], 10);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  const cities = [
+    { name: "San Francisco", coords: [37.7749, -122.4194] },
+    { name: "Oakland", coords: [37.8044, -122.2712] },
+    { name: "Berkeley", coords: [37.8715, -122.2730] },
+    { name: "San Jose", coords: [37.3382, -121.8863] },
+    { name: "Palo Alto", coords: [37.4419, -122.1430] },
+    { name: "Fremont", coords: [37.5485, -121.9886] },
+    { name: "Richmond", coords: [37.9358, -122.3477] },
+    { name: "San Mateo", coords: [37.5630, -122.3255] },
+    { name: "Walnut Creek", coords: [37.9101, -122.0652] },
+    { name: "Vallejo", coords: [38.1041, -122.2566] },
+  ];
+
+  cities.forEach(city => {
+    L.marker(city.coords).addTo(map).bindPopup(`<b>${city.name}</b>`);
+  });
+
+  // --- Very High Fire Hazard Severity Zones (CAL FIRE FRAP, State GIS) ---
+  const fhszStyle = {
+    color: '#b30000',
+    weight: 1,
+    fillColor: '#ff0000',
+    fillOpacity: 0.35
+  };
+
+  const fhszLayer = L.layerGroup();
+
+  const bayAreaBbox = '-123.6,36.8,-121.2,38.9';
+  const fhszSources = [
+    // SRA: State Responsibility Area, filtered to Very High
+    `https://services.gis.ca.gov/arcgis/rest/services/Environment/Fire_Severity_Zones/MapServer/0/query?where=${encodeURIComponent("HAZ_CLASS='Very High'")}&geometry=${bayAreaBbox}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=HAZ_CLASS&returnGeometry=true&outSR=4326&f=geojson`,
+    // LRA: Local Responsibility Area, recommended Very High (all features in this layer are VH)
+    `https://services.gis.ca.gov/arcgis/rest/services/Environment/Fire_Severity_Zones/MapServer/1/query?geometry=${bayAreaBbox}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=VH_REC&returnGeometry=true&outSR=4326&f=geojson`
+  ];
+
+  Promise.all(fhszSources.map(url => fetch(url).then(r => r.json())))
+    .then(results => {
+      results.forEach(geojson => {
+        if (geojson && geojson.features) {
+          L.geoJSON(geojson, { style: fhszStyle }).addTo(fhszLayer);
+        }
+      });
+      fhszLayer.addTo(map);
+    })
+    .catch(err => console.error('Failed to load fire hazard zones:', err));
+
+  L.control.layers(null, { 'Very High Fire Hazard Zones': fhszLayer }, { collapsed: false }).addTo(map);
+
+  const legend = L.control({ position: 'bottomleft' });
+  legend.onAdd = function () {
+    const div = L.DomUtil.create('div', 'legend-box');
+    div.innerHTML = '<span class="legend-swatch"></span>Very High Fire Hazard Severity Zone<br>' +
+      '<span style="font-size:10px;color:#555;">Source: CAL FIRE FRAP (State &amp; Local Responsibility Areas)</span>';
+    return div;
+  };
+  legend.addTo(map);
+</script>
+</body>
+</html>
