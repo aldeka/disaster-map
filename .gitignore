@@ -1,2 +1,4 @@
 */.DSStore
 node_modules
+dist
+/tmp
