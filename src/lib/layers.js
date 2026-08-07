@@ -44,7 +44,7 @@ export const LAYERS = [
     dataUrl: "/data/faults.json",
     colorVar: "--fault",
     kind: "line",
-    width: 2,
+    width: 1,
     lineOpacity: 0.8,
     defaultVisible: true,
   },
