@@ -8,7 +8,7 @@ export const LAYERS = [
     dataUrl: "/data/fire_hazard_veryhigh.json",
     colorVar: "--fire-veryhigh",
     kind: "fill",
-    // pattern: { type: "stripes", width: 4, gap: 0.5, angle: -65 },
+    pattern: { type: "stripes", width: 3, gap: 0.5, angle: -65 },
     defaultVisible: true,
   },
   {
@@ -17,7 +17,7 @@ export const LAYERS = [
     dataUrl: "/data/fire_hazard_high.json",
     colorVar: "--fire-high",
     kind: "fill",
-    // pattern: { type: "stripes", width: 2, angle: -65 },
+    pattern: { type: "stripes", width: 2, angle: -65 },
     defaultVisible: true,
   },
   {
@@ -26,7 +26,7 @@ export const LAYERS = [
     dataUrl: "/data/flood_100yr.json",
     colorVar: "--flood-100",
     kind: "fill",
-    // pattern: { type: "stripes", width: 4, gap: 0.5, angle: 15 },
+    pattern: { type: "stripes", width: 4, gap: 0.5, angle: 0 },
     defaultVisible: true,
   },
   {
@@ -35,7 +35,7 @@ export const LAYERS = [
     dataUrl: "/data/flood_500yr.json",
     colorVar: "--flood-500",
     kind: "fill",
-    // pattern: { type: "stripes", width: 1, gap: 1, angle: 15 },
+    pattern: { type: "stripes", width: 2, gap: 2, angle: 0 },
     defaultVisible: true,
   },
   {
@@ -63,6 +63,7 @@ export const LAYERS = [
     dataUrl: "/data/landslide.json",
     colorVar: "--landslide",
     kind: "fill",
+    pattern: { type: "dots" },
     noBorder: true,
     defaultVisible: false,
   },

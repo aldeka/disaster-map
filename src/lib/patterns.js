@@ -21,8 +21,17 @@ function makeTileCanvas() {
   return { canvas, ctx };
 }
 
-export function createStripeTile(color, widthPx, angleDeg, gapPx) {
+export function createStripeTile(
+  color,
+  widthPx,
+  angleDeg,
+  gapPx,
+  bgOpacity = 0.5,
+) {
   const { canvas, ctx } = makeTileCanvas();
+  // add transparent background of the same color
+  ctx.fillStyle = `${color}${(bgOpacity * 255).toString(16).slice(0, 2).toUpperCase()}`;
+  ctx.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
   const period = widthPx + gapPx;
   ctx.save();
   ctx.translate(TILE_SIZE / 2, TILE_SIZE / 2);
@@ -36,11 +45,19 @@ export function createStripeTile(color, widthPx, angleDeg, gapPx) {
   return canvas;
 }
 
-export function createDotTile(color, dotRadiusPx = 1, spacingPx = 4) {
+export function createDotTile(
+  color,
+  dotRadiusPx = 1,
+  spacingPx = 4,
+  bgOpacity = 0.5,
+) {
   const { canvas, ctx } = makeTileCanvas();
   // add transparent background of the same color
-  // ctx.fillStyle = `${color}44`;
-  // ctx.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+  ctx.fillStyle = `${color}${Math.round(bgOpacity * 255)
+    .toString(16)
+    .slice(0, 2)
+    .toUpperCase()}`;
+  ctx.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
   ctx.fillStyle = color;
   let row = 0;
   for (let y = spacingPx / 2; y < TILE_SIZE; y += spacingPx) {

@@ -1,13 +1,13 @@
 :root {
   /* layer colors */
   --fire-veryhigh: #c3005b;
-  --fire-high: tomato;
-  --flood-500: dodgerblue;
-  --flood-100: rgb(6, 85, 164);
-  --tsunami: darkslateblue;
-  --dam-failure: darkblue;
-  --liquefaction: goldenrod;
-  --landslide: rgb(160, 82, 45, 0.6);
+  --fire-high: #ff6347;
+  --flood-500: #86c2ff;
+  --flood-100: #004992;
+  --tsunami: #483d8b;
+  --dam-failure: #00008b;
+  --liquefaction: #daa520;
+  --landslide: #6e2a0f;
   --fault: #618c18;
 }
 
