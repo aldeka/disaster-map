@@ -12,7 +12,7 @@ The project is a static client-side SvelteJS app. It also includes Python script
 
 ## Map
 
-The background map should be simplified at a distance and visually nice to look at, while still having some reference place labels. Users should be able to pan and zoom in/out and at high zoom levels be able to identify streets/buildings. Basic OpenStreetMaps is too ugly for our purposes. MapTiler's Infoviz mode might work better. Open to other free mapping service suggestions.
+The background map should be simplified at a distance and visually nice to look at, while still having some reference place labels. Users should be able to pan and zoom in/out and at high zoom levels be able to identify streets/buildings. Basic OpenStreetMaps is too ugly for our purposes.
 
 By default the map should show about a 30-mile radius centered on San Mateo Bridge.
 

@@ -136,6 +136,11 @@
       mapLoaded = true;
     });
 
+    if (import.meta.env.DEV) {
+      window.__map = map;
+      window.__LAYERS = LAYERS;
+    }
+
     return () => map.remove();
   });
 </script>
