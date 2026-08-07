@@ -36,16 +36,24 @@ export function createStripeTile(color, widthPx, angleDeg, gapPx) {
   return canvas;
 }
 
-export function createDotTile(color, dotRadiusPx = 2, spacingPx = 8) {
+export function createDotTile(color, dotRadiusPx = 1, spacingPx = 4) {
   const { canvas, ctx } = makeTileCanvas();
+  // add transparent background of the same color
+  // ctx.fillStyle = `${color}44`;
+  // ctx.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
   ctx.fillStyle = color;
-  ctx.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
-  ctx.globalCompositeOperation = "destination-out";
-  ctx.fillStyle = "black";
+  let row = 0;
   for (let y = spacingPx / 2; y < TILE_SIZE; y += spacingPx) {
+    row += 1;
     for (let x = spacingPx / 2; x < TILE_SIZE; x += spacingPx) {
       ctx.beginPath();
-      ctx.arc(x, y, dotRadiusPx, 0, Math.PI * 2);
+      ctx.arc(
+        !!(row % 2) ? x : x + spacingPx / 2,
+        y,
+        dotRadiusPx,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
     }
   }

@@ -49,8 +49,8 @@
         source: sourceId(layer),
         paint: {
           "line-color": resolveColor(layer.colorVar),
-          "line-opacity": layer.lineOpacity ?? 0.66,
-          "line-width": 1.5,
+          "line-opacity": layer.lineOpacity ?? 0.3,
+          "line-width": layer.width ?? 1,
         },
         layout: { visibility: initialVis },
       });

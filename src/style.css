@@ -1,14 +1,14 @@
 :root {
   /* layer colors */
-  --fire-veryhigh: crimson;
+  --fire-veryhigh: #c3005b;
   --fire-high: tomato;
   --flood-500: dodgerblue;
   --flood-100: rgb(6, 85, 164);
   --tsunami: darkslateblue;
   --dam-failure: darkblue;
   --liquefaction: goldenrod;
-  --landslide: sienna;
-  --fault: darkolivegreen;
+  --landslide: rgb(160, 82, 45, 0.6);
+  --fault: #618c18;
 }
 
 html,

@@ -8,6 +8,7 @@ export const LAYERS = [
     dataUrl: "/data/fire_hazard_veryhigh.json",
     colorVar: "--fire-veryhigh",
     kind: "fill",
+    // pattern: { type: "stripes", width: 4, gap: 0.5, angle: -65 },
     defaultVisible: true,
   },
   {
@@ -16,8 +17,8 @@ export const LAYERS = [
     dataUrl: "/data/fire_hazard_high.json",
     colorVar: "--fire-high",
     kind: "fill",
-    pattern: { type: "stripes", width: 3, angle: -65 },
-    defaultVisible: false,
+    // pattern: { type: "stripes", width: 2, angle: -65 },
+    defaultVisible: true,
   },
   {
     id: "flood-100",
@@ -25,6 +26,7 @@ export const LAYERS = [
     dataUrl: "/data/flood_100yr.json",
     colorVar: "--flood-100",
     kind: "fill",
+    // pattern: { type: "stripes", width: 4, gap: 0.5, angle: 15 },
     defaultVisible: true,
   },
   {
@@ -33,8 +35,8 @@ export const LAYERS = [
     dataUrl: "/data/flood_500yr.json",
     colorVar: "--flood-500",
     kind: "fill",
-    pattern: { type: "stripes", width: 6, gap: 2, angle: 15 },
-    defaultVisible: false,
+    // pattern: { type: "stripes", width: 1, gap: 1, angle: 15 },
+    defaultVisible: true,
   },
   {
     id: "faults",
@@ -42,7 +44,8 @@ export const LAYERS = [
     dataUrl: "/data/faults.json",
     colorVar: "--fault",
     kind: "line",
-    lineOpacity: 0.7,
+    width: 2,
+    lineOpacity: 0.8,
     defaultVisible: true,
   },
   {
@@ -61,7 +64,7 @@ export const LAYERS = [
     colorVar: "--landslide",
     kind: "fill",
     noBorder: true,
-    defaultVisible: true,
+    defaultVisible: false,
   },
   {
     id: "tsunami",
