@@ -220,7 +220,8 @@ def main():
         paginate=True,
         bbox=bbox,
     )
-    write_json("fire_hazard_veryhigh.json", sra_veryhigh + lra_veryhigh)
+    fire_veryhigh = clip_to_land(sra_veryhigh + lra_veryhigh, land_mask)
+    write_json("fire_hazard_veryhigh.json", fire_veryhigh)
 
     print("Fetching CAL FIRE High Fire Hazard Severity Zones...")
     sra_high = fetch_arcgis_layer(
@@ -237,7 +238,8 @@ def main():
         paginate=True,
         bbox=bbox,
     )
-    write_json("fire_hazard_high.json", sra_high + lra_high)
+    fire_high = clip_to_land(sra_high + lra_high, land_mask)
+    write_json("fire_hazard_high.json", fire_high)
 
     print("Fetching FEMA 100-year flood zones (SFHA)...")
     flood100 = fetch_arcgis_layer(
@@ -247,6 +249,7 @@ def main():
         paginate=True,
         bbox=bbox,
     )
+    flood100 = clip_to_land(flood100, land_mask)
     write_json("flood_100yr.json", flood100)
 
     print("Fetching FEMA 500-year flood zones...")
@@ -257,6 +260,7 @@ def main():
         paginate=True,
         bbox=bbox,
     )
+    flood500 = clip_to_land(flood500, land_mask)
     write_json("flood_500yr.json", flood500)
 
     print("Fetching major earthquake fault traces...")
@@ -278,6 +282,7 @@ def main():
         paginate=True,
         bbox=bbox,
     )
+    liquefaction = clip_to_land(liquefaction, land_mask)
     write_json("liquefaction.json", liquefaction)
 
     print("Fetching landslide zones...")
@@ -288,6 +293,7 @@ def main():
         paginate=True,
         bbox=bbox,
     )
+    landslide = clip_to_land(landslide, land_mask)
     write_json("landslide.json", landslide)
 
     print("Fetching tsunami inundation zones...")
@@ -310,6 +316,7 @@ def main():
         paginate=True,
         bbox=bbox,
     )
+    dam = clip_to_land(dam, land_mask)
     write_json("dam_inundation.json", dam)
 
 
