@@ -21,7 +21,7 @@ function makeTileCanvas() {
   return { canvas, ctx };
 }
 
-export function createStripeTile(color, widthPx, angleDeg, gapPx = 1) {
+export function createStripeTile(color, widthPx, angleDeg, gapPx) {
   const { canvas, ctx } = makeTileCanvas();
   const period = widthPx + gapPx;
   ctx.save();
@@ -62,7 +62,7 @@ function toImageData(canvas) {
 export function createPatternTile(spec, color) {
   if (spec.type === "stripes") {
     return toImageData(
-      createStripeTile(color, spec.width, spec.angle, spec.gap ?? 0),
+      createStripeTile(color, spec.width, spec.angle, spec.gap ?? 1),
     );
   }
   if (spec.type === "dots") {

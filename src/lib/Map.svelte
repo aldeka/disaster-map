@@ -1,13 +1,13 @@
 <script>
-  import { MapLibreMap, NavigationControl } from "maplibre-gl";
-  import "maplibre-gl/dist/maplibre-gl.css";
+  import { Map as MapTilerMap, config as maptilerConfig } from "@maptiler/sdk";
+  import "@maptiler/sdk/dist/maptiler-sdk.css";
   import { onMount } from "svelte";
   import { LAYERS } from "./layers.js";
   import { createPatternTile, resolveColor } from "./patterns.js";
 
   let { visibility = $bindable({}) } = $props();
 
-  const BASEMAP_STYLE = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
+  const MAP_STYLE = "019fdda7-f399-7e8f-9c4a-7914e40cbe3f"; // DisasterDataviz
   // Approx. midpoint of the San Mateo Bridge.
   const CENTER = [-122.22, 37.6];
   const RADIUS_MILES = 30;
@@ -126,12 +126,13 @@
   });
 
   onMount(() => {
-    map = new MapLibreMap({
+    maptilerConfig.apiKey = import.meta.env.VITE_MAPTILER_KEY;
+    map = new MapTilerMap({
       container: mapContainer,
-      style: BASEMAP_STYLE,
+      style: MAP_STYLE,
       bounds: boundsForRadius(CENTER, RADIUS_MILES),
+      navigationControl: "top-right",
     });
-    map.addControl(new NavigationControl(), "top-right");
     map.on("load", () => {
       mapLoaded = true;
     });
