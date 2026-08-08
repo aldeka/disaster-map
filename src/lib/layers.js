@@ -1,6 +1,7 @@
 // Layer registry: drives both the map layers and the legend rows.
 // Order matches plan.md. Fill layers get 33% fill-opacity / 66% border
-// opacity by default; the fault layer is line-only at 70% opacity.
+// opacity by default; the fault layer overrides fill-opacity to 90% for a
+// crisp look, since its data is pre-buffered into thin corridor shapes.
 export const LAYERS = [
   {
     id: "fire-veryhigh",
@@ -62,9 +63,9 @@ export const LAYERS = [
     label: "Major earthquake faults",
     dataUrl: "/data/faults.json",
     colorVar: "--fault",
-    kind: "line",
-    width: 4,
-    lineOpacity: 0.5,
+    kind: "fill",
+    fillOpacity: 0.9,
+    noBorder: true,
     defaultVisible: true,
   },
   {

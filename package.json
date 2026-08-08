@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.2.0",
+    "@turf/buffer": "^7.4.0",
     "@turf/dissolve": "^7.4.0",
     "@turf/flatten": "^7.4.0",
     "@turf/helpers": "^7.4.0",

@@ -30,7 +30,7 @@
   const sourceId = (layer) => `src-${layer.id}`;
   const fillLayerId = (layer) => `layer-${layer.id}-fill`;
   const lineLayerId = (layer) => `layer-${layer.id}-line`;
-  const FAULTS_LINE_ID = "layer-faults-line";
+  const FAULTS_TOP_ID = "layer-faults-fill";
 
   function setVisibleIfExists(layer, visible) {
     const vis = visible ? "visible" : "none";
@@ -57,10 +57,10 @@
       return;
     }
 
-    // Keep the always-on-top fault lines above every fill layer added after them.
-    const beforeId = layer.id !== "faults" && map.getLayer(FAULTS_LINE_ID) ? FAULTS_LINE_ID : undefined;
+    // Keep the always-on-top faults shape above every fill layer added after it.
+    const beforeId = layer.id !== "faults" && map.getLayer(FAULTS_TOP_ID) ? FAULTS_TOP_ID : undefined;
 
-    const fillPaint = { "fill-opacity": 0.5 };
+    const fillPaint = { "fill-opacity": layer.fillOpacity ?? 0.5 };
     if (layer.pattern) {
       const patternId = `pattern-${layer.id}`;
       if (!map.hasImage(patternId)) {

@@ -25,7 +25,9 @@ function dissolveSafe(fc) {
   }
 }
 
-for (const layer of LAYERS.filter((l) => l.kind === "fill")) {
+// faults gets its own buffer+merge pipeline in scripts/merge-faults.mjs since
+// it starts as line geometry, not polygons.
+for (const layer of LAYERS.filter((l) => l.kind === "fill" && l.id !== "faults")) {
   const filePath = path.join(publicDir, layer.dataUrl);
   const fc = JSON.parse(readFileSync(filePath, "utf8"));
   const before = fc.features.length;
