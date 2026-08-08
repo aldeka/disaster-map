@@ -60,7 +60,7 @@
     // Keep the always-on-top fault lines above every fill layer added after them.
     const beforeId = layer.id !== "faults" && map.getLayer(FAULTS_LINE_ID) ? FAULTS_LINE_ID : undefined;
 
-    const fillPaint = { "fill-opacity": 0.33 };
+    const fillPaint = { "fill-opacity": 0.5 };
     if (layer.pattern) {
       const patternId = `pattern-${layer.id}`;
       if (!map.hasImage(patternId)) {
