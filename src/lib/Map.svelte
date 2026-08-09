@@ -85,19 +85,26 @@
     );
 
     if (!layer.noBorder) {
-      map.addLayer(
-        {
-          id: lineLayerId(layer),
-          type: "line",
-          source: sourceId(layer),
-          paint: {
-            "line-color": resolveColor(layer.colorVar),
-            "line-opacity": 0.66,
-          },
-          layout: { visibility: initialVis },
+      const borderLayer = {
+        id: lineLayerId(layer),
+        type: "line",
+        source: sourceId(layer),
+        paint: {
+          "line-color": resolveColor(layer.colorVar),
+          "line-opacity": 0.66,
+          "line-width": layer.borderWidth ?? 1,
         },
-        beforeId,
-      );
+        layout: { visibility: initialVis },
+      };
+      if (layer.taperedBorder) {
+        // Only stroke the companion LineString "taper stroke" features, not
+        // the fill polygons' own outlines -- see buildTaperStrokeSegments
+        // for why tracing the ribbon polygon's outline draws a blunt cap at
+        // each tapered tip instead of a point.
+        borderLayer.filter = ["==", ["geometry-type"], "LineString"];
+        borderLayer.paint["line-width"] = ["*", ["coalesce", ["get", "widthFraction"], 1], layer.borderWidth ?? 1];
+      }
+      map.addLayer(borderLayer, beforeId);
     }
   }
 

@@ -65,7 +65,20 @@ export const LAYERS = [
     colorVar: "--fault",
     kind: "fill",
     fillOpacity: 0.9,
-    noBorder: true,
+    // Ribbon polygons are real-world-meter widths, so they shrink toward
+    // sub-pixel at low zoom no matter how wide they're drawn up close. A
+    // border stroke (constant screen pixels, unlike the fill) keeps faults
+    // visible zoomed out without changing the tuned close-up thickness --
+    // wide at the initial ~30-mile-radius view, fading out by the zoom
+    // level where the fill itself is already legible.
+    borderWidth: ["interpolate", ["linear"], ["zoom"], 8, 3, 10, 2, 13, 0.5, 15, 0],
+    // faults.json also carries LineString "stroke" features (see
+    // buildTaperStrokeSegments) approximating the ribbon's taper via a
+    // widthFraction property, since a stroke traced along the ribbon
+    // polygon's own outline draws a blunt/round cap at each tapered tip.
+    // taperedBorder tells Map.svelte to stroke only those LineStrings
+    // (not the fill polygons' outlines) and scale each by widthFraction.
+    taperedBorder: true,
     defaultVisible: true,
   },
   {

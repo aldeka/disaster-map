@@ -1,4 +1,4 @@
-- In all interactions and commit messages, be extremely concise and sacrifice grammar for the sake of concision.
+- In all interactions and commit messages, be extremely concise. Sacrifice grammar for the sake of concision. No apologies or compliments, just the facts.
 
 - Don't write to any directories outside this repository. That includes /tmp. Temporary files like logs can go in this repository as needed.
 
