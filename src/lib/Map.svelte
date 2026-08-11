@@ -25,6 +25,9 @@
   let mapContainer;
   let map;
   let mapLoaded = $state(false);
+  // Insertion point so hazard layers draw above basemap fills/lines but
+  // below all place/road/water labels -- computed once the style loads.
+  let firstSymbolLayerId;
   const pendingLoads = new Set();
 
   const sourceId = (layer) => `src-${layer.id}`;
@@ -43,22 +46,27 @@
     const initialVis = visibility[layer.id] ? "visible" : "none";
 
     if (layer.kind === "line") {
-      map.addLayer({
-        id: lineLayerId(layer),
-        type: "line",
-        source: sourceId(layer),
-        paint: {
-          "line-color": resolveColor(layer.colorVar),
-          "line-opacity": layer.lineOpacity ?? 0.3,
-          "line-width": layer.width ?? 1,
+      map.addLayer(
+        {
+          id: lineLayerId(layer),
+          type: "line",
+          source: sourceId(layer),
+          paint: {
+            "line-color": resolveColor(layer.colorVar),
+            "line-opacity": layer.lineOpacity ?? 0.3,
+            "line-width": layer.width ?? 1,
+          },
+          layout: { visibility: initialVis },
         },
-        layout: { visibility: initialVis },
-      });
+        firstSymbolLayerId,
+      );
       return;
     }
 
-    // Keep the always-on-top faults shape above every fill layer added after it.
-    const beforeId = layer.id !== "faults" && map.getLayer(FAULTS_TOP_ID) ? FAULTS_TOP_ID : undefined;
+    // Keep the always-on-top faults shape above every fill layer added after
+    // it, and everything below the label layers so place names stay legible.
+    const beforeId =
+      layer.id !== "faults" && map.getLayer(FAULTS_TOP_ID) ? FAULTS_TOP_ID : firstSymbolLayerId;
 
     const fillPaint = { "fill-opacity": layer.fillOpacity ?? 0.5 };
     if (layer.pattern) {
@@ -141,6 +149,7 @@
       navigationControl: "top-right",
     });
     map.on("load", () => {
+      firstSymbolLayerId = map.getStyle().layers.find((l) => l.type === "symbol")?.id;
       mapLoaded = true;
     });
 
