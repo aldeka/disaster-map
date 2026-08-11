@@ -1,7 +1,5 @@
 // Layer registry: drives both the map layers and the legend rows.
-// Order matches plan.md. Fill layers get 33% fill-opacity / 66% border
-// opacity by default; the fault layer overrides fill-opacity to 90% for a
-// crisp look, since its data is pre-buffered into thin corridor shapes.
+// Order matches plan.md.
 export const LAYERS = [
   {
     id: "fire-veryhigh",
@@ -64,14 +62,26 @@ export const LAYERS = [
     dataUrl: "/data/faults.json",
     colorVar: "--fault",
     kind: "fill",
-    fillOpacity: 0.9,
+    fillOpacity: 0.8,
     // Ribbon polygons are real-world-meter widths, so they shrink toward
     // sub-pixel at low zoom no matter how wide they're drawn up close. A
     // border stroke (constant screen pixels, unlike the fill) keeps faults
     // visible zoomed out without changing the tuned close-up thickness --
     // wide at the initial ~30-mile-radius view, fading out by the zoom
     // level where the fill itself is already legible.
-    borderWidth: ["interpolate", ["linear"], ["zoom"], 8, 3, 10, 2, 13, 0.5, 15, 0],
+    borderWidth: [
+      "interpolate",
+      ["linear"],
+      ["zoom"],
+      8,
+      3,
+      10,
+      2,
+      13,
+      0.5,
+      15,
+      0,
+    ],
     // faults.json also carries LineString "stroke" features (see
     // buildTaperStrokeSegments) approximating the ribbon's taper via a
     // widthFraction property, since a stroke traced along the ribbon
@@ -96,5 +106,6 @@ export const LAYERS = [
     colorVar: "--dam-failure",
     kind: "fill",
     defaultVisible: true,
+    fillOpacity: 0.7,
   },
 ];

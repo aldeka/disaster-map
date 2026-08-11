@@ -2,13 +2,13 @@
   /* layer colors */
   --fire-veryhigh: #c3005b;
   --fire-high: #ff6347;
-  --flood-500: #86c2ff;
+  --flood-500: #5ba3eb;
   --flood-100: #004992;
-  --tsunami: #483d8b;
-  --dam-failure: #00008b;
+  --tsunami: #5749b3;
+  --dam-failure: #490076;
   --liquefaction: #b79f62;
   --landslide: #6e2a0f;
-  --fault: #086f5a;
+  --fault: #027056;
 }
 
 html,
@@ -39,8 +39,8 @@ body {
 
 .legend {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  bottom: 3rem;
+  left: 1rem;
   z-index: 1;
   background: white;
   border-radius: 8px;
@@ -53,7 +53,8 @@ body {
 }
 
 .legend h2 {
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
   margin: 0 0 0.5rem;
 }
 

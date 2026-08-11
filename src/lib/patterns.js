@@ -49,7 +49,7 @@ export function createDotTile(
   color,
   dotRadiusPx = 1,
   spacingPx = 4,
-  bgOpacity = 0.5,
+  bgOpacity = 0.6,
 ) {
   const { canvas, ctx } = makeTileCanvas();
   // add transparent background of the same color

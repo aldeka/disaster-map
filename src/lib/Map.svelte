@@ -45,30 +45,12 @@
     map.addSource(sourceId(layer), { type: "geojson", data: geojson });
     const initialVis = visibility[layer.id] ? "visible" : "none";
 
-    if (layer.kind === "line") {
-      map.addLayer(
-        {
-          id: lineLayerId(layer),
-          type: "line",
-          source: sourceId(layer),
-          paint: {
-            "line-color": resolveColor(layer.colorVar),
-            "line-opacity": layer.lineOpacity ?? 0.3,
-            "line-width": layer.width ?? 1,
-          },
-          layout: { visibility: initialVis },
-        },
-        firstSymbolLayerId,
-      );
-      return;
-    }
-
     // Keep the always-on-top faults shape above every fill layer added after
     // it, and everything below the label layers so place names stay legible.
     const beforeId =
       layer.id !== "faults" && map.getLayer(FAULTS_TOP_ID) ? FAULTS_TOP_ID : firstSymbolLayerId;
 
-    const fillPaint = { "fill-opacity": layer.fillOpacity ?? 0.5 };
+    const fillPaint = { "fill-opacity": layer.fillOpacity ?? 0.4 };
     if (layer.pattern) {
       const patternId = `pattern-${layer.id}`;
       if (!map.hasImage(patternId)) {
@@ -99,7 +81,7 @@
         source: sourceId(layer),
         paint: {
           "line-color": resolveColor(layer.colorVar),
-          "line-opacity": 0.66,
+          "line-opacity": 0.8,
           "line-width": layer.borderWidth ?? 1,
         },
         layout: { visibility: initialVis },
