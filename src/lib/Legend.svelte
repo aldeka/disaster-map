@@ -5,11 +5,11 @@
 </script>
 
 <div class="legend">
-  <h2>Hazard layers</h2>
+  <h2>Hazard zones</h2>
   <ul>
     {#each LAYERS as layer (layer.id)}
       <li>
-        <label>
+        <label style:font-weight={visibility[layer.id] ? "500" : "300"}>
           <input type="checkbox" bind:checked={visibility[layer.id]} />
           <span class="swatch" style:--layer-color="var({layer.colorVar})"></span>
           {layer.label}

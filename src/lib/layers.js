@@ -17,7 +17,7 @@ export const LAYERS = [
     colorVar: "--fire-high",
     kind: "fill",
     pattern: { type: "stripes", width: 2, angle: -65 },
-    defaultVisible: true,
+    defaultVisible: false,
   },
   {
     id: "liquefaction",
@@ -54,7 +54,7 @@ export const LAYERS = [
     colorVar: "--flood-500",
     kind: "fill",
     pattern: { type: "stripes", width: 4, gap: 4, angle: 0 },
-    defaultVisible: true,
+    defaultVisible: false,
   },
   {
     id: "faults",
@@ -105,7 +105,7 @@ export const LAYERS = [
     dataUrl: "/data/dam_inundation.json",
     colorVar: "--dam-failure",
     kind: "fill",
-    defaultVisible: true,
     fillOpacity: 0.7,
+    defaultVisible: false,
   },
 ];
