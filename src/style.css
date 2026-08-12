@@ -6,9 +6,11 @@
   --flood-100: #055aaf;
   --tsunami: #5749b3;
   --dam-failure: #490076;
-  --liquefaction: #b79f62;
+  --liquefaction: #c8a03b;
   --landslide: #6e2a0f;
   --fault: #027056;
+
+  --safety: #fff15d;
 }
 
 html,
@@ -31,22 +33,37 @@ body {
   left: 1rem;
   z-index: 1;
   padding: 0.75rem 1rem;
-  background: rgb(253, 251, 251);
-  border-radius: 8px;
-  border: 1px solid rgb(208, 206, 206);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: #fdf273; /*#fdfbfb;*/
+  background-image: linear-gradient(
+    40deg,
+    var(--safety) 25%,
+    color-mix(in srgb, var(--safety), gray 8%) 25%,
+    color-mix(in srgb, var(--safety), gray 8%) 50%,
+    var(--safety) 50%,
+    var(--safety) 75%,
+    color-mix(in srgb, var(--safety), gray 8%) 75%,
+    color-mix(in srgb, var(--safety), gray 8%) 100%
+  );
+  background-size: 24px 20px;
+  border-radius: 0.25rem;
+  border: 1px solid #c7a600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .title-box {
   top: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  font-weight: 600;
+}
+
+.title-box h1 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
 }
 
 .legend {
   bottom: 3rem;
-  width: 270px;
-  max-width: 270px;
+  width: 272px;
+  max-width: 272px;
   max-height: calc(100% - 2rem);
   overflow-y: auto;
   font-size: 0.85rem;
@@ -54,7 +71,7 @@ body {
 
 .legend h2 {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 0 0.75rem;
 }
 

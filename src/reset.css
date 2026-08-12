@@ -1,10 +1,8 @@
-/* based on Chris Coyer's reset, with minor edits: https://master.dev/blog/the-coyier-css-starter/ */
+/* based on Chris Coyer's reset, with some edits: https://master.dev/blog/the-coyier-css-starter/ */
 
 html {
   color-scheme: light dark;
-  /* font:
-    clamp(1rem, 1rem + 0.5vw, 2rem) / 1.4 system-ui,
-    sans-serif; */
+  font-size: 16px;
   tab-size: 2;
   hanging-punctuation: first allow-end last;
   word-break: break-word;

@@ -10,7 +10,7 @@
   <ul>
     {#each LAYERS as layer (layer.id)}
       <li>
-        <label style:font-weight={visibility[layer.id] ? "600" : "400"}>
+        <label style:font-weight={visibility[layer.id] ? "700" : "500"}>
           <ToggleSwitch bind:value={visibility[layer.id]} fontSize="1rem" label={layer.label} accentColor="var({layer.colorVar})"/>
         </label>
       </li>
