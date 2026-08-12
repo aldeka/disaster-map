@@ -17,4 +17,5 @@
       </li>
     {/each}
   </ul>
+  <small>Sources: CAL FIRE, FEMA, California State Geoportal, US Census TIGERWeb</small>
 </div>
