@@ -1,18 +1,17 @@
 <script>
   import { LAYERS } from "./layers.js";
+  import ToggleSwitch from "./ToggleSwitch.svelte";
 
   let { visibility = $bindable({}) } = $props();
 </script>
 
 <div class="legend">
-  <h2>Hazard zones</h2>
+  <h2>Show/hide hazard zones</h2>
   <ul>
     {#each LAYERS as layer (layer.id)}
       <li>
-        <label style:font-weight={visibility[layer.id] ? "500" : "300"}>
-          <input type="checkbox" bind:checked={visibility[layer.id]} />
-          <span class="swatch" style:--layer-color="var({layer.colorVar})"></span>
-          {layer.label}
+        <label style:font-weight={visibility[layer.id] ? "600" : "400"}>
+          <ToggleSwitch bind:value={visibility[layer.id]} fontSize="1rem" label={layer.label} accentColor="var({layer.colorVar})"/>
         </label>
       </li>
     {/each}

@@ -62,7 +62,7 @@ export const LAYERS = [
     dataUrl: "/data/faults.json",
     colorVar: "--fault",
     kind: "fill",
-    fillOpacity: 0.8,
+    fillOpacity: 0.9,
     // Ribbon polygons are real-world-meter widths, so they shrink toward
     // sub-pixel at low zoom no matter how wide they're drawn up close. A
     // border stroke (constant screen pixels, unlike the fill) keeps faults
