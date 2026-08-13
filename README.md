@@ -2,7 +2,7 @@
 
 This is the code for a static site that visualizes different types of natural disaster risks in the bay area and environs. There's Python scripts for downloading and frobbing publicly-available hazard data from various sources and a static Svelte app for displaying the cached data.
 
-Full disclosure: I used Claude to generate much of this project. See the section at the end of the README for an overly verbose essay on why and how I did that.
+Full disclosure: I used Claude to generate much of this project. <a href="#llm-use">See the section at the end of the README</a> for an overly verbose essay on why and how I did that.
 
 ## Why
 
@@ -29,7 +29,7 @@ Map library is [Mapbox](https://www.mapbox.com/).
 
 ## LLM Use
 
-I used this project as an excuse to try using an LLM code assistant for the first time.
+Gently challenged by someone dear to me that my LLM refusenik status was entirely driven by secondhand hot takes rather than personal experience, I used this project as an excuse to try using an LLM code assistant for the first time.
 
 I let Claude Code download and frob the data for me. Claude also wrote most of the map embed code since I didn't have much experience with using mapping libraries.
 
@@ -43,11 +43,13 @@ In my experience almost all online map visualizations are ugly. (The data and li
 
 I learned some things about how to work with Claude Code and now better understand some of the jargon. https://www.youtube.com/watch?v=M6mYodf0dJM was a helpful video for getting started and I also got a lot out of Anthropic's [docs](https://support.claude.com/en/articles/14553413-claude-code-cheatsheet). Reading the ~~weirdly browbeating prayers of supplication~~"skills" in https://github.com/anthropics/skills/ that overlap with my areas of expertise and care was completely fucking horrifying. 🫠
 
-I discovered that the <a href="https://en.wikipedia.org/wiki/Cayce_Pollard">psychic-anaphylactic reaction</a>, the (sometimes-literal) nausea I often get from AI-generated writing and visuals did not kick in for me with code. (Well, except for the comments. And the chatbot itself at times.) That was somewhat comforting.
+I discovered that the <a href="https://en.wikipedia.org/wiki/Cayce_Pollard">psychic-anaphylactic reaction</a>, the (sometimes-literal) nausea I often get from AI-generated writing and visuals, did not kick in for me with the code. (Well, except for the comments. And the chatbot itself at times.) That was somewhat comforting. Feeling in control of the look and feel of the project UI, specifically, was extremely important for me. I let Claude write very little CSS (and most of that got deleted as I refined the design).
 
 I still don't know how much I would trust Claude Code for a project that actually mattered--especially one that's brownfield, where I'm on the hook for maintenance and bug fixes, where I can't just throw out the whole thing and start over.
 
-And beyond that... **I see how LLMs make helplessness easy.** For example, rather than doing the work of reading the docs to remind myself how to bind a value with a subcomponent in Svelte, I could have just asked Claude to do it. Same thing happened while trying to figure out how do a minor thing with Vite. I _didn't_ ask Claude for those, but I noticed the impulse. I hate that for things that are obviously in my domain. I found it extremely useful for things that I know little about and don't have anyone else to work on them with, especially with time constraints. How do we square those?
+And beyond that... **I see how LLMs make helplessness easy.** For example, rather than doing the work of reading the docs to remind myself how to bind a value with a subcomponent in Svelte, I could have just asked Claude to do it. Same thing happened while trying to figure out how do a minor thing with Vite. I _didn't_ ask Claude for those, but I noticed the impulse. I hate that for things that are obviously in my domain. I found it extremely useful for things that I know little about and don't have anyone else to work on them with. How do we square those?
+
+(I have a friend who told me that she does not like using LLMs for her day-to-day mostly-backend coding but she found them SUPER helpful for generating UI components and styles for a project she was working on. As you can probably guess, we have very different domains of expertise just within web development! Maybe LLMs make it easy for each of us to devalue the kinds of work we don't know how to do--whatever that may be--and believe that everybody else is automating The Wrong Thing but we're doing it Correctly!)
 
 To use LLMs, it seems like you have to decide in advance the bounds of what you want to learn and be good at and what you don't. I don't think most people are deliberating that question intentionally, and even when they do (or claim that they do), I fear the temptation to let those bounds constrict until you don't really know anything anymore. Chatbots are addictive by nature. I now have some small personal experience with this. Others have done more research and written in greater detail on this dynamic but I imagine external professional pressure to go faster and LGTMallthethings.gif makes that even worse.
 
