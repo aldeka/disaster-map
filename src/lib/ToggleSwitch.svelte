@@ -13,7 +13,7 @@
 
 		const uniqueID = Math.floor(Math.random() * 100)
 
-    function handleClick(event){
+    function handleClick(){
         value = !value;
     }
 </script>
