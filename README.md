@@ -2,11 +2,11 @@
 
 This is the code for a static site that visualizes different types of natural disaster risks in the bay area and environs. There's Python scripts for downloading and frobbing publicly-available hazard data from various sources and a static Svelte app for displaying the cached data.
 
-Full disclosure: I used Claude to generate much of this project.
+Full disclosure: I used Claude to generate much of this project. See the section at the end of the README for an overly verbose essay on why and how I did that.
 
 ## Why
 
-The idea behind this project had been on my side projects TODO list for...almost a decade?! (Back when I thought I might own a house one day, I made a preliminary version on paper with crayons since I couldn't find a map with more than one data type.)
+The idea behind this project had been on my side projects TODO list for...almost a decade?! (Back when I thought I might own a house one day, I made a preliminary version on paper with crayons since I couldn't find a map with more than one data type to help evaluate housing units for sale.)
 
 ## Sources
 
@@ -19,26 +19,36 @@ Hazard data:
 
 Map library is [Mapbox](https://www.mapbox.com/).
 
+## Hypothetical further work
+
+- The landslide data is very incomplete; it only covers the immediate surroundings of the bay. Supposedly there's federal data that would provide more coverage, but according to Claude it uses a totally different methodology/standard and would be a BIG download so I didn't bother with that.
+- Manmade hazards (noise pollution, superfund sites, major industrial hazards like refineries) would be cool to add. I don't know if there's good sources of data for all of those, though. Light pollution is definitely not worth adding, it's basically ALL bad here.
+- I wanted to make the toggles also show the stripes/dots as-used on the map, but that was going to be a whole project of CSS <--> canvas styling translation so I didn't bother for now.
+- Speaking of which, the textures on some of the layers are intended to make the map more accessible to colorblind users (without being ugly or distracting). I am not colorblind myself, so I don't know if I achieved that goal or not.
+- Oh, you know, the usual: tests, better separation of concerns, deleting useless stuff... 😂
+
 ## LLM Use
 
-This project was an excuse to try using an LLM code assistant for the first time. I let Claude download and frob the data for me. Claude also wrote most of the map embed code since I didn't have much experience with using mapping libraries.
+I used this project as an excuse to try using an LLM code assistant for the first time.
 
-The hacky styling, though? That's pretty much all me. And so is this writing. 😂
+I let Claude Code download and frob the data for me. Claude also wrote most of the map embed code since I didn't have much experience with using mapping libraries.
+
+The hacky styling, though? That's pretty much all me. And so is this writing. :P
 
 ### How it went
 
-This project got done WAAAAAAAY faster than it would have without Claude. (See also: ten freaking years of not getting to it earlier.) However, I didn't really _learn_ much in the sense of new programming skills. I have some sample code for map-based infoviz now, but I didn't write it. The data downloads and frobbing I still know nothing about (I never touched it myself). This was a nice chance to refresh my `<canvas>` know-how since I hadn't done that in a long time, but I had done that previously. As well as Svelte and CSS, of course.
+Getting to ~85% completion went WAY faster than it would have without Claude. I didn't feel like I had to fight with the bot much. However, I didn't really _learn_ much in the way of new programming skills. I have some sample code for map-based infoviz now, but I didn't write most of it. The download and frobbing scripts I know nothing about (I never touched them myself). This was a nice chance to refresh my `<canvas>` know-how since I hadn't done that in a long time, but I had done that previously. As well as Svelte and CSS, of course.
 
-In my experience almost all online map visualizations are ugly. (Because the data and libraries they are made of seem to be ugly-by-default.) IMHO this one is...less bad, through much trial and error and telling Claude to merge contiguous regions and stop deleting the Hayward Fault. So that part was an interesting and educational design challenge!
+In my experience almost all online map visualizations are ugly. (The data and libraries they are made of seem to be ugly-by-default, for numerous reasons.) IMHO this one is...less bad, through much manual trial and error and telling Claude to merge contiguous regions and to trim regions extending over water and consolidate fault system lines in a reasonable way. (That last one took Claude several tries--by _far_ the task it was worst at--and I'm still not totally happy with the results.) So in that respect this project was an interesting and educational design challenge!
 
-I learned some things about how to work with Claude Code and now better understand some of the jargon. https://www.youtube.com/watch?v=M6mYodf0dJM was a helpful video for getting started and I also got a lot out of Anthropic's [docs](https://support.claude.com/en/articles/14553413-claude-code-cheatsheet). I was never in any danger of hitting any token limits (on the monthly Pro plan, which you need to get access to Claude Code at all) nor did context windows ever become an issue.
+I learned some things about how to work with Claude Code and now better understand some of the jargon. https://www.youtube.com/watch?v=M6mYodf0dJM was a helpful video for getting started and I also got a lot out of Anthropic's [docs](https://support.claude.com/en/articles/14553413-claude-code-cheatsheet). Reading the ~~weirdly browbeating prayers of supplication~~"skills" in https://github.com/anthropics/skills/ that overlap with my areas of expertise and care was completely fucking horrifying. 🫠
 
-Reading the ~~prayers of supplication~~skills in https://github.com/anthropics/skills/ that overlap with my areas of expertise and care was completely fucking horrifying. 🫠
+I discovered that the <a href="https://en.wikipedia.org/wiki/Cayce_Pollard">psychic-anaphylactic reaction</a>, the (sometimes-literal) nausea I often get from AI-generated writing and visuals did not kick in for me with code. (Well, except for the comments. And the chatbot itself at times.) That was somewhat comforting.
 
-## Further work
+I still don't know how much I would trust Claude Code for a project that actually mattered--especially one that's brownfield, where I'm on the hook for maintenance and bug fixes, where I can't just throw out the whole thing and start over.
 
-- The landslide data is very incomplete; it only covers the immediate surroundings of the bay. Supposedly there's federal data that would provide more coverage, but it uses a totally different methodology/standard and would be a BIG download so I didn't bother with that.
-- Manmade hazards (noise pollution, superfund sites, major industrial hazards like refineries) would be cool to add. I don't know if there's good sources of data for all of those, though. Light pollution is definitely not worth adding, it's basically ALL bad here XD
-- I wanted to make the toggles also show the stripes/dots as-used on the map, but that was going to be a whole project of CSS <--> canvas styling translation so I didn't bother for now.
-- Speaking of which, the textures on some of the layers are intended to make the map more accessible to colorblind users (without being ugly or distracting). I am not colorblind myself, so I don't know if I achieved that goal or not.
-- Oh, you know, the usual: tests, better separation of concerns, deleting useless stuff... This is very much not a production ready project.
+And beyond that... **I see how LLMs make helplessness easy.** For example, rather than doing the work of reading the docs to remind myself how to bind a value with a subcomponent in Svelte, I could have just asked Claude to do it. Same thing happened while trying to figure out how do a minor thing with Vite. I _didn't_ ask Claude for those, but I noticed the impulse. I hate that for things that are obviously in my domain. I found it extremely useful for things that I know little about and don't have anyone else to work on them with, especially with time constraints. How do we square those?
+
+To use LLMs, it seems like you have to decide in advance the bounds of what you want to learn and be good at and what you don't. I don't think most people are deliberating that question intentionally, and even when they do (or claim that they do), I fear the temptation to let those bounds constrict until you don't really know anything anymore. Chatbots are addictive by nature. I now have some small personal experience with this. Others have done more research and written in greater detail on this dynamic but I imagine external professional pressure to go faster and LGTMallthethings.gif makes that even worse.
+
+(And of course none of this even starts to consider the ethics of looting and DDOSing the intellectual commons and semi-literally boiling the planet in order to turn billionaires into trillionaires and glaze the egos of the worst humans you know 💅✨🙃)
