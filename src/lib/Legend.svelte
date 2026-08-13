@@ -17,4 +17,5 @@
     {/each}
   </ul>
   <small>Sources: CAL FIRE, FEMA, California State Geoportal, US Census TIGERWeb</small>
+  <small><a href="https://github.com/aldeka/hazard-map-source">Source code</a> | CC-0 <a href="https://fogwave.design">Karen Rustad Tolva</a></small>
 </div>
