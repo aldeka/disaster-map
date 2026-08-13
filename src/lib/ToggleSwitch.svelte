@@ -45,6 +45,7 @@
       margin: 0;
       background: color-mix(in srgb, var(--gray), white 40%);
       border: 2px solid var(--gray);
+      cursor: pointer;
   }
 
   .s--slider button::before {
