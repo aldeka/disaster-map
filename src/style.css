@@ -81,7 +81,7 @@ a {
 
 .legend ul {
   list-style: none;
-  margin: 0;
+  margin: 0 0 0.5rem 0;
   padding: 0;
 }
 
@@ -91,13 +91,18 @@ a {
 
 .legend small {
   display: block;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 @media (max-width: 640px) {
   .title-box,
   .legend {
     padding: 0.5rem 0.75rem;
+  }
+
+  .title-box {
+    top: 0.5rem;
+    left: 0.5rem;
   }
 
   .legend {
@@ -108,8 +113,7 @@ a {
     max-width: none;
     max-height: 45vh;
     font-size: 0.95rem;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    border-radius: 0;
   }
 
   .legend ul {
@@ -123,12 +127,26 @@ a {
     margin-bottom: 0;
   }
 
-  /* The legend goes full-width and flush to the bottom edge on mobile,
-     which would otherwise sit right under (and get hidden behind) MapLibre's
-     default bottom-right attribution control -- push it up to just above
-     the legend's top edge instead. Matches .legend's max-height above so
-     the two stay lined up if either changes. */
-  .maplibregl-ctrl-bottom-right {
-    bottom: 45vh;
+  /* On mobile the legend becomes a real bottom-of-viewport panel rather
+     than a floating overlay, so give the map only the space that's left
+     over instead of the full viewport -- a stacked flex column, map on
+     top (flex: 1, shrinks to fit) and legend below (sized by its own
+     content, capped by max-height above). */
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  #map {
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .legend {
+    position: static;
   }
 }
