@@ -32,6 +32,8 @@ Map library is [Mapbox](https://www.mapbox.com/).
 
 Gently challenged by someone dear to me that my LLM refusenik status was entirely driven by secondhand hot takes rather than personal experience, I used this project as an excuse to try using an LLM code assistant for the first time.
 
+I intended to publish how many tokens I used on this project, but bewilderingly Claude Pro doesn't give you any way to track usage over time! My last Claude Code session used 615,000 tokens, but that's an underestimate since I did work over multiple sessions. >.< If I ever do this again I guess I'll keep track manually?
+
 I let Claude Code download and frob the data for me. Claude also wrote most of the map embed code since I didn't have much experience with using mapping libraries.
 
 The hacky styling, though? That's pretty much all me. And so is this writing. :P
