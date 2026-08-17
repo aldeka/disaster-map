@@ -1,8 +1,19 @@
 <script>
   import { LAYERS } from "./layers.js";
   import ToggleSwitch from "./ToggleSwitch.svelte";
+  import { createPatternTileDataUrl, resolveColor } from "./patterns.js";
 
   let { visibility = $bindable({}) } = $props();
+
+  // Same tiles the map itself renders, so a toggle's swatch matches its
+  // layer's fill pattern rather than just its color. Computed once since
+  // LAYERS and the CSS custom properties are both static.
+  const patternUrls = Object.fromEntries(
+    LAYERS.filter((l) => l.pattern).map((l) => [
+      l.id,
+      createPatternTileDataUrl(l.pattern, resolveColor(l.colorVar)),
+    ]),
+  );
 </script>
 
 <div class="legend">
@@ -11,7 +22,12 @@
     {#each LAYERS as layer (layer.id)}
       <li>
         <label style:font-weight={visibility[layer.id] ? "700" : "500"}>
-          <ToggleSwitch bind:value={visibility[layer.id]} fontSize="1rem" label={layer.label} accentColor="var({layer.colorVar})"/>
+          <ToggleSwitch
+            bind:value={visibility[layer.id]}
+            label={layer.label}
+            accentColor="var({layer.colorVar})"
+            patternUrl={patternUrls[layer.id]}
+          />
         </label>
       </li>
     {/each}

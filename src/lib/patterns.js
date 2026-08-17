@@ -84,14 +84,23 @@ function toImageData(canvas) {
   return ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
 
-export function createPatternTile(spec, color) {
+function createTileCanvas(spec, color) {
   if (spec.type === "stripes") {
-    return toImageData(
-      createStripeTile(color, spec.width, spec.angle, spec.gap ?? 1),
-    );
+    return createStripeTile(color, spec.width, spec.angle, spec.gap ?? 1);
   }
   if (spec.type === "dots") {
-    return toImageData(createDotTile(color));
+    return createDotTile(color);
   }
   throw new Error(`Unknown pattern type: ${spec.type}`);
+}
+
+export function createPatternTile(spec, color) {
+  return toImageData(createTileCanvas(spec, color));
+}
+
+// Same tile the map's fill-pattern uses, as a CSS-usable data URL -- lets
+// the legend toggles show the real pattern instead of a flat color swatch,
+// without re-implementing stripes/dots a second time in CSS.
+export function createPatternTileDataUrl(spec, color) {
+  return createTileCanvas(spec, color).toDataURL();
 }

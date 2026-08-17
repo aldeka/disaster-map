@@ -93,3 +93,42 @@ a {
   display: block;
   margin-top: 0.5rem;
 }
+
+@media (max-width: 640px) {
+  .title-box,
+  .legend {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .legend {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-width: none;
+    max-height: 45vh;
+    font-size: 0.95rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .legend ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0.75rem;
+    row-gap: 0.35rem;
+  }
+
+  .legend li {
+    margin-bottom: 0;
+  }
+
+  /* The legend goes full-width and flush to the bottom edge on mobile,
+     which would otherwise sit right under (and get hidden behind) MapLibre's
+     default bottom-right attribution control -- push it up to just above
+     the legend's top edge instead. Matches .legend's max-height above so
+     the two stay lined up if either changes. */
+  .maplibregl-ctrl-bottom-right {
+    bottom: 45vh;
+  }
+}

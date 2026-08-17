@@ -6,8 +6,8 @@
 
     let {
       label,
-      fontSize = 16, 
       accentColor = "blue",
+      patternUrl = null,
       value = $bindable(false)
     } = $props();
 
@@ -18,7 +18,11 @@
     }
 </script>
 
-<div class="s s--slider" style:font-size="{fontSize}px" style:--accent-color={accentColor}>
+<div
+    class="s s--slider"
+    class:has-pattern={!!patternUrl}
+    style:--accent-color={accentColor}
+    style:--pattern-image={patternUrl ? `url("${patternUrl}")` : "none"}>
     <button
         role="switch"
         aria-checked={value}
@@ -63,6 +67,22 @@
   .s--slider button[aria-checked='true']{
       border-color: color-mix(in srgb, var(--accent-color), white 10%);
       background-color: color-mix(in srgb, var(--accent-color), white 30%);
+      background-image: var(--pattern-image, none);
+      /* Matches patterns.js's TILE_SIZE (the tile's native logical scale,
+         before its internal 2x pixel-ratio for HiDPI sharpness) -- shrinking
+         much further makes stripe/dot periods sub-pixel and blurs into a
+         flat color instead of a recognizable pattern. */
+      background-size: 64px 64px;
+      background-repeat: repeat;
+  }
+
+  /* The pattern tile already paints its own light accent-color wash under
+     solid-color stripes/dots (same look as the map's fill) -- on top of the
+     already-accent-tinted background-color above, that reads as one flat
+     blob instead of a visible pattern. White behind it restores the
+     contrast, same as the neutral basemap the pattern sits on on the map. */
+  .s--slider.has-pattern button[aria-checked='true']{
+      background-color: #fff;
   }
 
   .s--slider button[aria-checked='true']::before{
