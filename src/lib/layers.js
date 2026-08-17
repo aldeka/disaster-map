@@ -97,7 +97,7 @@ export const LAYERS = [
     dataUrl: "./data/tsunami.json",
     colorVar: "--tsunami",
     kind: "fill",
-    defaultVisible: true,
+    defaultVisible: false,
   },
   {
     id: "dam-failure",
