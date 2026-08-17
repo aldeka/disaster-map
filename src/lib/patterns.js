@@ -29,15 +29,6 @@ export function createStripeTile(
   bgOpacity = 0.5,
 ) {
   const { canvas, ctx } = makeTileCanvas();
-  // Translucent background wash of the same color. Uses globalAlpha rather
-  // than appending a hex alpha suffix to `color` -- that only produces a
-  // valid CSS color when `color` is already `#rrggbb` hex, which held in
-  // dev (where style.css is served close to as-written) but broke in the
-  // production build, where Vite's CSS minifier rewrites some hex colors
-  // to shorter named-color equivalents (e.g. `#ff6347` -> `tomato`),
-  // making the suffixed string invalid and silently falling back to
-  // opaque black instead of the intended light wash. globalAlpha works
-  // with any valid CSS color string, so it isn't sensitive to that.
   ctx.save();
   ctx.globalAlpha = bgOpacity;
   ctx.fillStyle = color;
@@ -50,12 +41,9 @@ export function createStripeTile(
   // A plain ctx.rotate() draws smooth, correctly-angled stripes, but the
   // result only repeats seamlessly across tile edges by coincidence --
   // MapLibre (and the toggle backgrounds) tile this square edge-to-edge
-  // with no blending, so any mismatch shows up as a visible seam. (A first
-  // attempt at fixing this drew stripes via per-row integer-pixel shifts
-  // instead of rotating -- that tiled seamlessly but made every stripe a
-  // visible staircase instead of a straight line.)
+  // with no blending, so any mismatch shows up as a visible seam.
   //
-  // Fixed instead by snapping the angle to atan2(b, a) for small integers
+  // Fixed by snapping the angle to atan2(b, a) for small integers
   // a, b: such an angle has cos/sin that are *exact* rational multiples of
   // 1/hypot(a,b), so a stripe spacing of TILE_SIZE/hypot(a,b) divides the
   // tile evenly in both x and y -- while still being a real rotation, so
@@ -96,8 +84,6 @@ export function createDotTile(
   bgOpacity = 0.6,
 ) {
   const { canvas, ctx } = makeTileCanvas();
-  // Translucent background wash -- see createStripeTile for why this uses
-  // globalAlpha instead of appending a hex alpha suffix to `color`.
   ctx.save();
   ctx.globalAlpha = bgOpacity;
   ctx.fillStyle = color;

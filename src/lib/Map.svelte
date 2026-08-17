@@ -25,6 +25,7 @@
   let mapContainer;
   let map;
   let mapLoaded = $state(false);
+
   // Insertion point so hazard layers draw above basemap fills/lines but
   // below all place/road/water labels -- computed once the style loads.
   let firstSymbolLayerId;

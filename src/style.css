@@ -128,10 +128,8 @@ a {
   }
 
   /* On mobile the legend becomes a real bottom-of-viewport panel rather
-     than a floating overlay, so give the map only the space that's left
-     over instead of the full viewport -- a stacked flex column, map on
-     top (flex: 1, shrinks to fit) and legend below (sized by its own
-     content, capped by max-height above). */
+    than a floating overlay, so give the map only the space that's left
+    over instead of the full viewport */
 
   #app {
     display: flex;
