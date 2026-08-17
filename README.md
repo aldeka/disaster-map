@@ -1,5 +1,7 @@
 # Bay Area Hazard Map
 
+[https://aldeka.github.io/bay-area-hazard-map](https://aldeka.github.io/bay-area-hazard-map)
+
 This is the code for a static site that visualizes different types of natural disaster risks in the bay area and environs. There's Python scripts for downloading and frobbing publicly-available hazard data from various sources and a static Svelte app for displaying the cached data.
 
 Full disclosure: I used Claude to generate much of this project. <a href="#llm-use">See the section at the end of the README</a> for an overly verbose essay on why and how I did that.
