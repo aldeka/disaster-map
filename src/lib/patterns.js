@@ -29,9 +29,20 @@ export function createStripeTile(
   bgOpacity = 0.5,
 ) {
   const { canvas, ctx } = makeTileCanvas();
-  // add transparent background of the same color
-  ctx.fillStyle = `${color}${(bgOpacity * 255).toString(16).slice(0, 2).toUpperCase()}`;
+  // Translucent background wash of the same color. Uses globalAlpha rather
+  // than appending a hex alpha suffix to `color` -- that only produces a
+  // valid CSS color when `color` is already `#rrggbb` hex, which held in
+  // dev (where style.css is served close to as-written) but broke in the
+  // production build, where Vite's CSS minifier rewrites some hex colors
+  // to shorter named-color equivalents (e.g. `#ff6347` -> `tomato`),
+  // making the suffixed string invalid and silently falling back to
+  // opaque black instead of the intended light wash. globalAlpha works
+  // with any valid CSS color string, so it isn't sensitive to that.
+  ctx.save();
+  ctx.globalAlpha = bgOpacity;
+  ctx.fillStyle = color;
   ctx.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+  ctx.restore();
 
   const period = widthPx + gapPx;
   const angleRad = (angleDeg * Math.PI) / 180;
@@ -85,12 +96,13 @@ export function createDotTile(
   bgOpacity = 0.6,
 ) {
   const { canvas, ctx } = makeTileCanvas();
-  // add transparent background of the same color
-  ctx.fillStyle = `${color}${Math.round(bgOpacity * 255)
-    .toString(16)
-    .slice(0, 2)
-    .toUpperCase()}`;
+  // Translucent background wash -- see createStripeTile for why this uses
+  // globalAlpha instead of appending a hex alpha suffix to `color`.
+  ctx.save();
+  ctx.globalAlpha = bgOpacity;
+  ctx.fillStyle = color;
   ctx.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+  ctx.restore();
   ctx.fillStyle = color;
   let row = 0;
   for (let y = spacingPx / 2; y < TILE_SIZE; y += spacingPx) {
