@@ -94,6 +94,17 @@ a {
   margin-top: 0.25rem;
 }
 
+#legend-show-hide {
+  display: none;
+}
+
+.legend .contents {
+  padding-top: 1em;
+  transition: max-height 0.4s ease-out;
+  overflow: hidden;
+  max-height: 45vh;
+}
+
 @media (max-width: 640px) {
   .title-box,
   .legend {
@@ -112,7 +123,7 @@ a {
     width: auto;
     max-width: none;
     max-height: 45vh;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     border-radius: 0;
   }
 
@@ -125,6 +136,10 @@ a {
 
   .legend li {
     margin-bottom: 0;
+  }
+
+  #legend-show-hide {
+    display: block;
   }
 
   /* On mobile the legend becomes a real bottom-of-viewport panel rather
@@ -146,5 +161,10 @@ a {
 
   .legend {
     position: static;
+  }
+
+  .legend .contents.hidden {
+    max-height: 0;
+    padding: 0;
   }
 }

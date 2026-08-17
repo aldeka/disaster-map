@@ -60,7 +60,7 @@
       background: #fff;
       box-shadow: 1px 0px 4px rgba(0, 0, 0, 0.1);
       top: 0em;
-      right: 1.5em;
+      right: calc(1.5em + 1px);
       transition: transform 0.3s;
   }
 
@@ -86,7 +86,7 @@
   }
 
   .s--slider button[aria-checked='true']::before{
-      transform: translateX(1.4em);
+      transform: translateX(calc(1.5em + 1px));
       transition: transform 0.3s;
       box-shadow: -1px 0px 3px rgba(0, 0, 0, 0.1);
   }
@@ -105,6 +105,7 @@
   }
 
   .s--slider span {
+    flex: 1;
     margin-left: 0.5em;
   }
 </style>
