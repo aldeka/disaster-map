@@ -32,16 +32,49 @@ export function createStripeTile(
   // add transparent background of the same color
   ctx.fillStyle = `${color}${(bgOpacity * 255).toString(16).slice(0, 2).toUpperCase()}`;
   ctx.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+
   const period = widthPx + gapPx;
+  const angleRad = (angleDeg * Math.PI) / 180;
+
+  // A plain ctx.rotate() draws smooth, correctly-angled stripes, but the
+  // result only repeats seamlessly across tile edges by coincidence --
+  // MapLibre (and the toggle backgrounds) tile this square edge-to-edge
+  // with no blending, so any mismatch shows up as a visible seam. (A first
+  // attempt at fixing this drew stripes via per-row integer-pixel shifts
+  // instead of rotating -- that tiled seamlessly but made every stripe a
+  // visible staircase instead of a straight line.)
+  //
+  // Fixed instead by snapping the angle to atan2(b, a) for small integers
+  // a, b: such an angle has cos/sin that are *exact* rational multiples of
+  // 1/hypot(a,b), so a stripe spacing of TILE_SIZE/hypot(a,b) divides the
+  // tile evenly in both x and y -- while still being a real rotation, so
+  // the stripes stay perfectly straight. a is chosen so that spacing comes
+  // out close to the requested period; b then comes from the requested
+  // angle's tangent, snapped to match.
+  const cosA = Math.cos(angleRad);
+  let a, b;
+  if (Math.abs(cosA) < 1e-9) {
+    a = 0;
+    b = Math.max(1, Math.round(TILE_SIZE / period));
+  } else {
+    a = Math.max(1, Math.round((TILE_SIZE * Math.abs(cosA)) / period));
+    b = Math.round(a * Math.tan(angleRad));
+  }
+  const mag = Math.hypot(a, b);
+  const snappedAngleRad = Math.atan2(b, a);
+  const perpPeriod = TILE_SIZE / mag;
+  const perpWidth = widthPx * (perpPeriod / period);
+
+  ctx.fillStyle = color;
   ctx.save();
   ctx.translate(TILE_SIZE / 2, TILE_SIZE / 2);
-  ctx.rotate((angleDeg * Math.PI) / 180);
-  ctx.fillStyle = color;
+  ctx.rotate(snappedAngleRad);
   const span = TILE_SIZE * 2;
-  for (let y = -span; y <= span; y += period) {
-    ctx.fillRect(-span, y, span * 2, widthPx);
+  for (let y = -span; y <= span; y += perpPeriod) {
+    ctx.fillRect(-span, y, span * 2, perpWidth);
   }
   ctx.restore();
+
   return canvas;
 }
 
