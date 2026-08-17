@@ -1,8 +1,3 @@
-// MapLibre's fill-pattern paint property needs a raster tile, not CSS -
-// generate stripe/dot pattern tiles on canvas, reading the fill color from
-// the corresponding CSS custom property so patterns stay in sync with
-// style.css. fill-opacity is applied separately by the caller, so these
-// are drawn at full alpha.
 const TILE_SIZE = 64;
 const PIXEL_RATIO = 2;
 
@@ -108,13 +103,6 @@ export function createDotTile(
   return canvas;
 }
 
-// MapLibre's addImage() only accepts HTMLImageElement | ImageBitmap | ImageData |
-// {width,height,data} -- a raw <canvas> silently fails to register, so convert.
-function toImageData(canvas) {
-  const ctx = canvas.getContext("2d");
-  return ctx.getImageData(0, 0, canvas.width, canvas.height);
-}
-
 function createTileCanvas(spec, color) {
   if (spec.type === "stripes") {
     return createStripeTile(color, spec.width, spec.angle, spec.gap ?? 1);
@@ -126,11 +114,15 @@ function createTileCanvas(spec, color) {
 }
 
 export function createPatternTile(spec, color) {
-  return toImageData(createTileCanvas(spec, color));
+  const canvas = createTileCanvas(spec, color);
+  const ctx = canvas.getContext("2d");
+  // MapLibre's addImage() only accepts HTMLImageElement | ImageBitmap | ImageData |
+  // {width,height,data} -- a raw <canvas> silently fails to register, so convert.
+  return ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
 
-// Same tile the map's fill-pattern uses, as a CSS-usable data URL -- lets
-// the legend toggles show the real pattern instead of a flat color swatch,
+// Same tile the map's fill-pattern uses but as a CSS-usable data URL -- lets
+// the legend toggles show the real pattern instead of a flat color swatch
 // without re-implementing stripes/dots a second time in CSS.
 export function createPatternTileDataUrl(spec, color) {
   return createTileCanvas(spec, color).toDataURL();
