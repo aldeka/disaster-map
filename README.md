@@ -26,7 +26,7 @@ Map library is [Mapbox](https://www.mapbox.com/).
 - The landslide data is very incomplete; it only covers the immediate surroundings of the bay. Supposedly there's federal data that would provide more coverage, but according to Claude it uses a totally different methodology/standard and would be a BIG download so I didn't bother with that.
 - Manmade hazards (noise pollution, superfund sites, major industrial hazards like refineries) would be cool to add. I don't know if there's good sources of data for all of those, though. Light pollution is definitely not worth adding, it's basically ALL bad here.
 - A box to look up and zoom in on a particular address and list the hazards present?
-- I wanted to make the toggles also show the stripes/dots as-used on the map, but that was going to be a whole project of CSS <--> canvas styling translation so I didn't bother for now.
+- ~I wanted to make the toggles also show the stripes/dots as-used on the map, but that was going to be a whole project of CSS <--> canvas styling translation so I didn't bother for now.~ JK I let Claude do this (with some moderate nudging and editing)
 - Speaking of which, the textures on some of the layers are intended to make the map more accessible to colorblind users (without being ugly or distracting). I am not colorblind myself, so I don't know if I achieved that goal or not.
 - Oh, you know, the usual: tests, better separation of concerns, deleting useless stuff... 😂
 
